@@ -13,6 +13,7 @@ class PCA():
             elif parameter=='Comp':
                 result=pca.components_  #principal component loadings.
 
+
             if not result.shape:
                 result=pd.DataFrame([1])
             else:
@@ -22,3 +23,17 @@ class PCA():
     def GetSequence(self):
         Seq=[1]
         return Seq
+
+    def MetaInformation(self,dim_row,dim_col,parameter,OrigHeader):
+        if parameter=='ExpVar':
+            header=['ExplainedVariance']
+            index=[]
+            for i in range(0,dim_row):
+                index.append('ExplainedVariance_' +str(i+1))
+
+        elif parameter=='Comp':
+            header=[]
+            for i in range(0,dim_col):
+                header.append('D' +str(i+1))
+            index=''
+        return header,index
