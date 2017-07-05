@@ -20,7 +20,6 @@ class kmeans():
             kmeans.fit(Data)
             labels = kmeans.labels_
             centers=kmeans.cluster_centers_
-            print centers
             if paramArray[1]=='CL':
                 result=pd.DataFrame(np.transpose(labels))
             elif paramArray[1]=='Cent':
@@ -42,7 +41,7 @@ class kmeans():
                 header.append('D' +str(i+1))
             index=[]
             for i in range(0,dim_row):
-                index.append('Cluster ' +str(i+1))
+                index.append('Cluster ' +str(i))
 
         return header,index
 
