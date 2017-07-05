@@ -10,13 +10,21 @@ from sklearn.cluster import MiniBatchKMeans, KMeans
 #from src.MainGUI import Ui_Form
 
 class kmeans():
-    def process(self,data,clusterSize):
+    def process(self,data,parameter):
+
+            paramArray=  np.array(parameter.split(','))
+            clusterSize=paramArray[0]
             Data = np.array(data)
             size=Data.shape
             kmeans = KMeans(int(clusterSize))
             kmeans.fit(Data)
             labels = kmeans.labels_
-            result=pd.DataFrame(np.transpose(labels))
+            centers=kmeans.cluster_centers_
+            print centers
+            if paramArray[1]=='CL':
+                result=pd.DataFrame(np.transpose(labels))
+            elif paramArray[1]=='Cent':
+                result=pd.DataFrame(centers)
             return result
 
     def GetSequence(self):
@@ -24,8 +32,18 @@ class kmeans():
         return Seq
 
     def MetaInformation(self,dim_row,dim_col,parameter,OrigHeader):
-        header=['Cluster Label']
-        index=''
+        paramArray=  np.array(parameter.split(','))
+        if paramArray[1]=='CL':
+            header=['Cluster_Label']
+            index=''
+        elif paramArray[1]=='Cent':
+            header=[]
+            for i in range(0,dim_col):
+                header.append('D' +str(i+1))
+            index=[]
+            for i in range(0,dim_row):
+                index.append('Cluster ' +str(i+1))
+
         return header,index
 
 
