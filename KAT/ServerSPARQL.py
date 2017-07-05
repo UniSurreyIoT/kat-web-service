@@ -224,7 +224,7 @@ def api_message():
 
                         return jsonify(Result=["Unable to store/or confirm storage of processed data"]),400
 
-                    return OutputCSV
+                    return jsonify(Result=[])
             else:
                 return jsonify(Result="Incorrect Sequence of Methods"),400
         else: return jsonify(Result="No. of parameters not equal to the No. of methods"),400
