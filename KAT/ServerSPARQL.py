@@ -26,7 +26,7 @@ def api_message():
         try:  #Check to see if JSON format is correct
             Requests = json.dumps(request.json)
         except:
-            return jsonify(Result="Incorrect JSON Format"),400
+            return jsonify(result="Incorrect JSON Format"),400
 
         Requests_parsed=json.loads(Requests)
 
@@ -37,22 +37,22 @@ def api_message():
             SPARQLquery=Requests_parsed['SPARQLquery']
             SPARQLendpoint=Requests_parsed['SPARQLendpoint']
         except:
-            return  jsonify(Result="Incorrect JSON labels"),400
+            return  jsonify(result="Incorrect JSON labels"),400
 
 
         #Collect Header information
         try:
             userIDstr=str(request.headers['userId'])
         except:
-            return  jsonify(Result="userId Header not included"),400
+            return  jsonify(result="userId Header not included"),400
         try:
             femoIdstr=str(request.headers['femoId'])
         except:
-            return  jsonify(Result="femoId Header not included"),400
+            return  jsonify(result="femoId Header not included"),400
         try:
             jobIdstr=str(request.headers['jobId'])
         except:
-            return  jsonify(Result="jobId Header not included"),400
+            return  jsonify(result="jobId Header not included"),400
 
 
 
@@ -68,19 +68,19 @@ def api_message():
             connection = opener.open(request_sparql, timeout=20)
         except:
             try:
-                request_sparql_backup = urllib2.Request("http://smart-ics1.ee.surrey.ac.uk/srd/sparql/test", data=SPARQLquery)
+                request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept",'text/csv')
                 request_sparql_backup.get_method = lambda: method
                 connection =opener.open(request_sparql_backup, timeout=20)
             except:
-                #return jsonify(Result="Unable to connect to SPARQL endpoint"),400
+                #return jsonify(result="Unable to connect to SPARQL endpoint"),400
 
-                return jsonify(Result=[]),400
+                return jsonify(result=[]),400
 
         try:
             RawResponse = connection.read()
         except:
-            return jsonify(Result="Unable to retrieve data"),400
+            return jsonify(result="Unable to retrieve data"),400
 
         try:
         #####  convert data into correct format from original SPARQL CSV format
@@ -98,7 +98,7 @@ def api_message():
                 SensObsLen[i]=Temp[1]
 
             if min(SensObsLen)<20:
-                return jsonify(Result="Length of data too small"),400  #if data length too short return error
+                return jsonify(result="Length of data too small"),400  #if data length too short return error
 
             for i in range(0,len(SensorUnique)):
                 Temp=SensorUnique[i]
@@ -119,7 +119,7 @@ def api_message():
                     Data[2*i+1]=np.transpose(tempTimeStamp)
                 tprev=Temp[1]+tprev        ####
         except:
-            return jsonify(Result="Unable to obtain data from SPRAQL Query"),400
+            return jsonify(result="Unable to obtain data from SPRAQL Query"),400
 
 
 
@@ -127,7 +127,7 @@ def api_message():
             Dim=len(Data.iloc[1])/2
 
         else:
-            return jsonify(Result="Either time stamp or data variable missing"),400
+            return jsonify(result="Either time stamp or data variable missing"),400
 
 
         HeaderNames= list(Data.columns.values)
@@ -198,7 +198,7 @@ def api_message():
             FLagMethodNames=am.CheckMethodNames() #Check if method names are valid
             if int(FLagMethodNames[0])>0:
                 ErrorString='Incorrect Method Name: '  +  MethodSend[int(FLagMethodNames[0])-1]
-                return jsonify(Result=ErrorString),400
+                return jsonify(result=ErrorString),400
             FlagSequence=am.CheckTechniqueSequence()
             if int(FlagSequence[0])==0:  #Error due to incorrect parameters.
                 am.LastMethod(MethodSend)
@@ -206,14 +206,14 @@ def api_message():
                 try:
                     Output = am.MetaInformation(Header,Output)
                 except:
-                    return jsonify(Result="Error"),400
+                    return jsonify(result="Error"),400
                 if Output is None:
-                    return jsonify(Result="In parameters, please consult documentation"),400
+                    return jsonify(result="In parameters, please consult documentation"),400
                 else:
                     OutputCSV= Output.to_csv(index=True,header=True)
-                    Out={ "Result": OutputCSV}
+                    Out={ "result": OutputCSV}
                     try:
-                        reqStore = urllib2.Request('http://smart-ics1.ee.surrey.ac.uk/experiment-result-store/')  #storage url will change.
+                        reqStore = urllib2.Request('http://localhost:8080/experiment-result-store/')  #storage url will change.
                         reqStore.add_header('Content-Type', 'application/json')
                         reqStore.add_header('userId', userIDstr)
                         reqStore.add_header('femoId', femoIdstr)
@@ -222,15 +222,15 @@ def api_message():
 
                     except:
 
-                        return jsonify(Result=["Unable to store/or confirm storage of processed data"]),400
+                        return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
 
-                    #return jsonify(Result=[])
+                    #return jsonify(result=[])
                     return OutputCSV
             else:
-                return jsonify(Result="Incorrect Sequence of Methods"),400
-        else: return jsonify(Result="No. of parameters not equal to the No. of methods"),400
+                return jsonify(result="Incorrect Sequence of Methods"),400
+        else: return jsonify(result="No. of parameters not equal to the No. of methods"),400
     else:
-        return jsonify(Result="Content In the Incorrect Format"),400
+        return jsonify(result="Content In the Incorrect Format"),400
 '''
 @app.route('/AnalysedDataRetrieval/<path:filename>', methods=['GET', 'POST'])
 def download_file(filename):
