@@ -67,19 +67,19 @@ def api_message():
 
         try:
             request_sparql = urllib2.Request(str(SPARQLendpoint), data=SPARQLquery)
-            request_sparql.add_header("Accept",'text/csv')
-            request_sparql.add_header("iPlanetDirectoryPro",iPlanetDirectoryProStr)
+            request_sparql.add_header("Accept", 'text/csv')
+            request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
             request_sparql.get_method = lambda: method
-            connection = opener.open(request_sparql, timeout=20)
+            connection = opener.open(request_sparql, timeout=20*60)
         except:
             try:
                 request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
-                request_sparql_backup.add_header("Accept",'text/csv')
-                request_sparql.add_header("iPlanetDirectoryPro",iPlanetDirectoryProStr)
+                request_sparql_backup.add_header("Accept", 'text/csv')
+                request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
                 request_sparql_backup.get_method = lambda: method
                 connection =opener.open(request_sparql_backup, timeout=20)
             except:
-                return jsonify(result="Unable to connect to SPARQL endpoint"),400
+                return jsonify(result="Unable to connect to SPARQL endpoint"), 400
 
                 #return jsonify(result=[]),400
 
@@ -92,12 +92,12 @@ def api_message():
         #####  convert data into correct format from original SPARQL CSV format
             TESTDATA=StringIO(RawResponse)
             df = pd.read_csv(TESTDATA, sep=",")
-            ResList= list(df['sensingDevice'])
-            DataV=list(df['dataValue'])
-            TimeStamp=list(df['dateTime'])
+            ResList = list(df['sensingDevice'])
+            DataV = list(df['dataValue'])
+            TimeStamp = list(df['dateTime'])
             C = Counter(ResList)
             SensorUnique = C.items()
-            tprev=0             #previous time
+            tprev = 0             #previous time
             SensObsLen=np.zeros(len(SensorUnique))
             for i in range(0,len(SensorUnique)):
                 Temp=SensorUnique[i]
