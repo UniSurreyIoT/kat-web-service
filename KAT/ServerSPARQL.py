@@ -53,7 +53,10 @@ def api_message():
             jobIdstr=str(request.headers['jobId'])
         except:
             return  jsonify(result="jobId Header not included"),400
-
+        try:
+           iPlanetDirectoryProStr =str(request.headers['iPlanetDirectoryPro'])
+        except:
+            return  jsonify(result="iPlanetDirectoryPro  Header not included"),400
 
 
         #SPARQL query at the SPARQL end point to retreive data
@@ -65,12 +68,14 @@ def api_message():
         try:
             request_sparql = urllib2.Request(str(SPARQLendpoint), data=SPARQLquery)
             request_sparql.add_header("Accept",'text/csv')
+            request_sparql.add_header("iPlanetDirectoryPro",iPlanetDirectoryProStr)
             request_sparql.get_method = lambda: method
             connection = opener.open(request_sparql, timeout=20)
         except:
             try:
                 request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept",'text/csv')
+                request_sparql.add_header("iPlanetDirectoryPro",iPlanetDirectoryProStr)
                 request_sparql_backup.get_method = lambda: method
                 connection =opener.open(request_sparql_backup, timeout=20)
             except:
