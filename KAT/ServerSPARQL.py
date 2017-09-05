@@ -61,10 +61,11 @@ def api_message():
         handler = urllib2.HTTPHandler()
         opener = urllib2.build_opener(handler)
 
-        request_sparql = urllib2.Request(SPARQLendpoint, data=SPARQLquery)
-        request_sparql.add_header("Accept",'text/csv')
-        request_sparql.get_method = lambda: method
+
         try:
+            request_sparql = urllib2.Request(str(SPARQLendpoint), data=SPARQLquery)
+            request_sparql.add_header("Accept",'text/csv')
+            request_sparql.get_method = lambda: method
             connection = opener.open(request_sparql, timeout=20)
         except:
             try:
@@ -73,9 +74,9 @@ def api_message():
                 request_sparql_backup.get_method = lambda: method
                 connection =opener.open(request_sparql_backup, timeout=20)
             except:
-                #return jsonify(Result="Unable to connect to SPARQL endpoint"),400
+                return jsonify(Result="Unable to connect to SPARQL endpoint"),400
 
-                return jsonify(Result=[]),400
+                #return jsonify(Result=[]),400
 
         try:
             RawResponse = connection.read()
@@ -208,7 +209,7 @@ def api_message():
                 except:
                     return jsonify(Result="Error"),400
                 if Output is None:
-                    return jsonify(Result="In parameters, please consult documentation"),400
+                    return jsonify(Result="Incorrect Method Parameter Specification"),400
                 else:
                     OutputCSV= Output.to_csv(index=True,header=True)
                     Out={ "Result": OutputCSV}
