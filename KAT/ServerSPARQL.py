@@ -69,7 +69,7 @@ def api_message():
             connection = opener.open(request_sparql, timeout=20)
         except:
             try:
-                request_sparql_backup = urllib2.Request("http://smart-ics1.ee.surrey.ac.uk/srd/sparql/test", data=SPARQLquery)
+                request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept",'text/csv')
                 request_sparql_backup.get_method = lambda: method
                 connection =opener.open(request_sparql_backup, timeout=20)
