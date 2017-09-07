@@ -81,6 +81,8 @@ def api_message():
                 request_sparql_backup.get_method = lambda: method
                 connection =opener.open(request_sparql_backup, timeout=20)
             except:
+                Str="Unable to connect to SPARQL endpoint"
+                SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
                 return jsonify(result="Unable to connect to SPARQL endpoint"), 400
 
                 #return jsonify(result=[]),400
@@ -88,6 +90,8 @@ def api_message():
         try:
             RawResponse = connection.read()
         except:
+            Str="Unable to retrieve data"
+            SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
             return jsonify(result="Unable to retrieve data"),400
 
         try:
@@ -106,6 +110,8 @@ def api_message():
                 SensObsLen[i]=Temp[1]
 
             if min(SensObsLen)<10:
+                Str="Length of data too small"
+                SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
                 return jsonify(result="Length of data too small"),400  #if data length too short return error
 
             for i in range(0,len(SensorUnique)):
@@ -127,6 +133,8 @@ def api_message():
                     Data[2*i+1]=np.transpose(tempTimeStamp)
                 tprev=Temp[1]+tprev        ####
         except:
+            Str="Unable to obtain data from SPRAQL Query"
+            SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
             return jsonify(result="Unable to obtain data from SPRAQL Query"),400
 
 
@@ -134,6 +142,8 @@ def api_message():
             Dim=len(Data.iloc[1])/2
 
         else:
+            Str="Either time stamp or data variable missing"
+            SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
             return jsonify(result="Either time stamp or data variable missing"),400
 
 
@@ -175,6 +185,8 @@ def api_message():
                         MinLength=MinLengthTemp
                     DataResamp[i]=ResampledData[0:MinLength]
         except:
+            Str="Unable to Resample Data"
+            SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
             return jsonify(result="Unable to Resample Data"),400
 
         #########################################################################################
@@ -195,6 +207,8 @@ def api_message():
             FLagMethodNames=am.CheckMethodNames() #Check if method names are valid
             if int(FLagMethodNames[0])>0:
                 ErrorString='Incorrect Method Name: '  +  MethodSend[int(FLagMethodNames[0])-1]
+                Str=ErrorString
+                SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
                 return jsonify(result=ErrorString),400
             FlagSequence=am.CheckTechniqueSequence()
             if int(FlagSequence[0])==0:  #Error due to incorrect parameters.
@@ -203,8 +217,12 @@ def api_message():
                 try:
                     Output = am.MetaInformation(Header,Output)
                 except:
+                    Str="Error"
+                    SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
                     return jsonify(result="Error"),400
                 if Output is None:
+                    Str="Incorrect Method Parameter Specification"
+                    SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
                     return jsonify(result="Incorrect Method Parameter Specification"),400
                 else:
                     OutputCSV= Output.to_csv(index=True,header=True)
@@ -218,12 +236,13 @@ def api_message():
                         response = urllib2.urlopen(reqStore, json.dumps(Out),timeout=60)
 
                     except:
-
                         return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
 
                     #return jsonify(result=[])
                     return OutputCSV
             else:
+                Str="Incorrect Sequence of Methods"
+                SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
                 return jsonify(result="Incorrect Sequence of Methods"),400
         else: return jsonify(result="No. of parameters not equal to the No. of methods"),400
     else:
@@ -234,8 +253,18 @@ def download_file(filename):
     uploads = os.path.join(app.root_path, app   .config['UPLOAD_FOLDER'])
     return send_from_directory(uploads,filename)#, delete(uploads,filename)
 '''
-
-
+def SaveFunction(Str,userIDstr,femoIdstr,jobIdstr):
+    try:
+        Out={ "Result": Str}
+        reqStore = urllib2.Request('http://smart-ics1.ee.surrey.ac.uk/experiment-result-store/')  #storage url will change.
+        reqStore.add_header('Content-Type', 'application/json')
+        reqStore.add_header('userId', userIDstr)
+        reqStore.add_header('femoId', femoIdstr)
+        reqStore.add_header('jobId', jobIdstr)
+        response = urllib2.urlopen(reqStore, json.dumps(Out),timeout=60)
+    except:
+        return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
+    return
 if __name__ == "__main__":
     #app.run(host="127.0.0.1", port=int("80"), debug=True)
     app.run()
