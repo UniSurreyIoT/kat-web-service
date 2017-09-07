@@ -68,6 +68,7 @@ def api_message():
         try:
             request_sparql = urllib2.Request(str(SPARQLendpoint), data=SPARQLquery)
             request_sparql.add_header("Accept", 'text/csv')
+            request_sparql.add_header("Content-Type", 'text/plain')
             request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
             request_sparql.get_method = lambda: method
             connection = opener.open(request_sparql, timeout=20*60)
@@ -75,6 +76,7 @@ def api_message():
             try:
                 request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept", 'text/csv')
+                request_sparql.add_header("Content-Type", 'text/plain')
                 request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
                 request_sparql_backup.get_method = lambda: method
                 connection =opener.open(request_sparql_backup, timeout=20)
@@ -103,7 +105,7 @@ def api_message():
                 Temp=SensorUnique[i]
                 SensObsLen[i]=Temp[1]
 
-            if min(SensObsLen)<20:
+            if min(SensObsLen)<10:
                 return jsonify(result="Length of data too small"),400  #if data length too short return error
 
             for i in range(0,len(SensorUnique)):
@@ -128,7 +130,6 @@ def api_message():
             return jsonify(result="Unable to obtain data from SPRAQL Query"),400
 
 
-
         if (len(Data.iloc[1]) % 2 == 0):  #check to see if number of coluns is even
             Dim=len(Data.iloc[1])/2
 
@@ -143,48 +144,38 @@ def api_message():
 
 
         ###############function for resampling the data to the lowest sampling frequency
-        T1=Data.iloc[1]
-        T2=Data.iloc[2]
-        SampleFreq=np.zeros(Dim)
-        for i in range(0,Dim): #calcaulate sample period for each sensor
-            pattern = '%Y-%m-%dT%H:%M:%S'
-            Temp1=T1[2*i+1]
-            Temp2=T2[2*i+1]
-            epoch1 = int(time.mktime(time.strptime(Temp1[:-1], pattern)))
-            epoch2 = int(time.mktime(time.strptime(Temp2[:-1], pattern)))
-            SampleFreq[i]=1/float((epoch2-epoch1))
+        try:
+            T1=Data.iloc[1]
+            T2=Data.iloc[2]
+            SampleFreq=np.zeros(Dim)
+            for i in range(0,Dim): #calcaulate sample period for each sensor
+                pattern = '%Y-%m-%dT%H:%M:%S'
+                Temp1=T1[2*i+1]
+                Temp2=T2[2*i+1]
+                epoch1 = int(time.mktime(time.strptime(Temp1[:-1], pattern)))
+                epoch2 = int(time.mktime(time.strptime(Temp2[:-1], pattern)))
+                SampleFreq[i]=1/float((epoch2-epoch1))
 
 
-        RealignSamplingFreq= min(SampleFreq) #resample to the lowest sampling frequency
-        MinLength=min(SensObsLen)
-        for i in range(0,Dim):
-            DataFromSensor=list(Data.iloc[:,2*i])
-
-            count=0
-            st=0
-
-            while count<len(Data) and st==0:
-                #if str(DataFromSensor[count])=="nan":
-                if not DataFromSensor[count]:
-                    st=1
-                count=count+1
-            if count==len(DataFromSensor):
-                TempListData=DataFromSensor[0:count]
-            else:
-                TempListData=DataFromSensor[0:count-1]   #Data from each observation extracted along each sensor and time interval
-
-            #carry out resample of the list
-            TempListDataNew=[np.float(ui) for ui in TempListData]
-            ResampledData= resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))
-            MinLengthTemp=len(ResampledData)
-
-            if i==0:
-                DataResamp=pd.DataFrame(ResampledData[0:MinLength])
-            else:
-                if MinLengthTemp<MinLength:
-                    DataResamp.drop(DataResamp.index[[MinLengthTemp,MinLength]])
-                    MinLength=MinLengthTemp
-                DataResamp[i]=ResampledData[0:MinLength]
+            RealignSamplingFreq= min(SampleFreq) #resample to the lowest sampling frequency
+            MinLength=min(SensObsLen)
+            #print Data.iloc[:,10]
+            #print len(Data)
+            for i in range(0,Dim):
+                DataFromSensor=list(Data.iloc[:,2*i])
+                #carry out resample of the list
+                TempListDataNew=[np.float(ui) for ui in DataFromSensor]
+                ResampledData= resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))
+                MinLengthTemp=len(ResampledData)
+                if i==0:
+                    DataResamp=pd.DataFrame(ResampledData[0:MinLength])
+                else:
+                    if MinLengthTemp<MinLength:
+                        DataResamp.drop(DataResamp.index[[MinLengthTemp,MinLength]])
+                        MinLength=MinLengthTemp
+                    DataResamp[i]=ResampledData[0:MinLength]
+        except:
+            return jsonify(result="Unable to Resample Data"),400
 
         #########################################################################################
 
