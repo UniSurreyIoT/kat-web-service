@@ -34,7 +34,7 @@ def api_message():
         try:
             Methods=Requests_parsed['Method']
             Parameters=Requests_parsed['Parameters']
-            SPARQLquery=Requests_parsed['SPARQLquery']
+            SPARQLquery=str(Requests_parsed['SPARQLquery'])
             SPARQLendpoint=Requests_parsed['SPARQLendpoint']
         except:
             return  jsonify(result="Incorrect JSON labels"),400
