@@ -95,8 +95,7 @@ def api_message():
         except:
             Str="Unable to retrieve data"
             SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
-            return jsonify(result="Unable to retrieve data"),400
-        print RawResponse
+            return jsonify(result="Unable to retrieve data"),200
         try:
         #####  convert data into correct format from original SPARQL CSV format
             TESTDATA=StringIO(RawResponse)
@@ -138,7 +137,7 @@ def api_message():
         except:
             Str="Unable to obtain data from SPARQL Query"
             SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
-            return jsonify(result="Unable to obtain data from SPARQL Query"),400
+            return jsonify(result="Unable to obtain data from SPARQL Query"),200
 
         if (len(Data.iloc[1]) % 2 == 0):  #check to see if number of coluns is even
             Dim=len(Data.iloc[1])/2
@@ -258,14 +257,13 @@ def download_file(filename):
 def SaveFunction(Str,userIDstr,femoIdstr,jobIdstr):
     try:
         Out={"result": Str}
-        print Out
         reqStore = urllib2.Request('https://localhost:8080/experiment-result-store/')  #storage url will change.
         reqStore.add_header('Content-Type', 'application/json')
         reqStore.add_header('userId', userIDstr)
         reqStore.add_header('femoId', femoIdstr)
         reqStore.add_header('jobId', jobIdstr)
         response = urllib2.urlopen(reqStore,json.dumps(Out),timeout=60)
-        print Out
+
     except:
         return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
     return
