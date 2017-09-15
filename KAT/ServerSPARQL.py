@@ -95,7 +95,7 @@ def api_message():
         except:
             Str="Unable to retrieve data"
             SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
-            return jsonify(result="Unable to retrieve data"),200
+            return jsonify(result="Unable to retrieve data from IoT Registry"),200
         try:
         #####  convert data into correct format from original SPARQL CSV format
             TESTDATA=StringIO(RawResponse)
@@ -240,7 +240,7 @@ def api_message():
                         return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
 
                     #return jsonify(result=[])
-                    return OutputCSV
+                    return jsonify(result=["Data Processed"]),200
             else:
                 Str="Incorrect Sequence of Methods"
                 SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
