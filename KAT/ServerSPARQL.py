@@ -40,7 +40,7 @@ def api_message():
             return  jsonify(result="Incorrect JSON labels"),400
 
 
-        SPARQLquery=SPARQLquery.replace("\\","")
+        #SPARQLquery=SPARQLquery.replace("\\","")
         #SPARQLquery=SPARQLquery[:-1]
         print SPARQLquery
         #Collect Header information
