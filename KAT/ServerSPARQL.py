@@ -41,7 +41,7 @@ def api_message():
 
 
         SPARQLquery=SPARQLquery.replace("\\","")
-        SPARQLquery=SPARQLquery[:-1]
+        #SPARQLquery=SPARQLquery[:-1]
         print SPARQLquery
         #Collect Header information
         try:
