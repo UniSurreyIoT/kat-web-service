@@ -5,6 +5,8 @@ import numpy as np
 class Periodogram():  #Calculates the abosulte value of the Fourier coefficients
     def process(self,data,parameters):
         Data = np.transpose(np.array(data))
+        Data=np.nan_to_num(Data)
+
         size=Data.shape
         Pxx_den=np.zeros((size[0],int(np.ceil(np.float(size[1]+1)/np.float(2)))))
 

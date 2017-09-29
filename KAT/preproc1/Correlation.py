@@ -8,7 +8,7 @@ class Correlation():
             if not result.shape:
                 result=pd.DataFrame([1])
             else:
-                result=pd.DataFrame(np.array(result.astype(np.float)))
+                result=pd.DataFrame(np.array(result.astype(np.float))).fillna(0)
             return result
 
     def GetSequence(self):

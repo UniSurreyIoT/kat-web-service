@@ -7,6 +7,8 @@ class PCA():
     def process(self,Data,parameter):
 
             Data = np.array(Data)
+            Data=np.nan_to_num(Data)
+
             pca.fit(Data)
             if parameter=='ExpVar':
                 result=pca.explained_variance_ratio_

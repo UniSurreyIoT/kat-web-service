@@ -10,6 +10,7 @@ class KNN():
 
             paramArray=  np.array(parameter.split(','))
             Data = np.transpose(np.array(Data))
+            Data=np.nan_to_num(Data)
             L=Data.shape
             Li=np.floor(L[1]*np.float(paramArray[2]))
             #train data

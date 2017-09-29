@@ -8,6 +8,7 @@ from sklearn.cluster import MiniBatchKMeans, KMeans
 #from PyQt4 import QtCore, QtGui
 #from scipy.cluster.vq import kmeans2
 #from src.MainGUI import Ui_Form
+from sklearn.metrics import  silhouette_score
 
 class kmeans():
     def process(self,data,parameter):
@@ -16,14 +17,20 @@ class kmeans():
             clusterSize=paramArray[0]
             Data = np.array(data)
             size=Data.shape
+            Data=np.nan_to_num(Data)
             kmeans = KMeans(int(clusterSize))
             kmeans.fit(Data)
+
             labels = kmeans.labels_
             centers=kmeans.cluster_centers_
+
             if paramArray[1]=='CL':
                 result=pd.DataFrame(np.transpose(labels))
             elif paramArray[1]=='Cent':
                 result=pd.DataFrame(centers)
+            elif  paramArray[1]=='Sil':
+                siloutte=silhouette_score(Data, labels)
+                result= pd.DataFrame([siloutte])
             return result
 
     def GetSequence(self):
@@ -42,6 +49,10 @@ class kmeans():
             index=[]
             for i in range(0,dim_row):
                 index.append('Cluster ' +str(i))
+        elif paramArray[1]=='Sil':
+            header=['Silhouette Score']
+            index=''
+
 
         return header,index
 

@@ -40,9 +40,9 @@ def api_message():
             return  jsonify(result="Incorrect JSON labels"),400
 
 
-        #SPARQLquery=SPARQLquery.replace("\\","")
+        SPARQLquery=SPARQLquery.replace("\\","")
         #SPARQLquery=SPARQLquery[:-1]
-        print SPARQLquery
+
         #Collect Header information
         try:
             userIDstr=str(request.headers['userId'])
@@ -170,8 +170,7 @@ def api_message():
 
             RealignSamplingFreq= min(SampleFreq) #resample to the lowest sampling frequency
             MinLength=min(SensObsLen)
-            #print Data.iloc[:,10]
-            #print len(Data)
+
             for i in range(0,Dim):
                 DataFromSensor=list(Data.iloc[:,2*i])
                 #carry out resample of the list
@@ -228,7 +227,7 @@ def api_message():
                 else:
                     OutputCSV= Output.to_csv(index=True,header=True)
                     Out={ "result": OutputCSV}
-                    try:
+                    '''try:
                         reqStore = urllib2.Request('https://localhost:8080/experiment-result-store/')  #storage url will change.
                         reqStore.add_header('Content-Type', 'application/json')
                         reqStore.add_header('userId', userIDstr)
@@ -237,10 +236,11 @@ def api_message():
                         response = urllib2.urlopen(reqStore, json.dumps(Out),timeout=60)
 
                     except:
-                        return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
+                        return jsonify(result=["Unable to store/or confirm storage of processed data"]),400'''
 
                     #return jsonify(result=[])
-                    return jsonify(result=["Data Processed"]),200
+                    #return jsonify(result=["Data Processed"]),200
+                    return jsonify(Out),200
             else:
                 Str="Incorrect Sequence of Methods"
                 SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
