@@ -34,13 +34,13 @@ def api_message():
         try:
             Methods=Requests_parsed['Method']
             Parameters=Requests_parsed['Parameters']
-            SPARQLquery=str(Requests_parsed['SPARQLquery'])
+            SPARQLquery=Requests_parsed['SPARQLquery']
             SPARQLendpoint=Requests_parsed['SPARQLendpoint']
         except:
             return  jsonify(result="Incorrect JSON labels"),400
 
 
-        SPARQLquery=SPARQLquery.replace("\\","")
+        #SPARQLquery=SPARQLquery.replace("\\","")
         #SPARQLquery=SPARQLquery[:-1]
 
         #Collect Header information
@@ -67,16 +67,17 @@ def api_message():
         handler = urllib2.HTTPHandler()
         opener = urllib2.build_opener(handler)
 
-
+        #print SPARQLquery
         try:
-            request_sparql = urllib2.Request(str(SPARQLendpoint), data=SPARQLquery)
-            request_sparql.add_header("Accept", 'text/csv')
+            request_sparql = urllib2.Request(str(SPARQLendpoint[0]), data=SPARQLquery[0])
             request_sparql.add_header("Content-Type", 'text/plain')
+            request_sparql.add_header("Accept", 'text/csv')
             request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
             request_sparql.get_method = lambda: method
             connection = opener.open(request_sparql, timeout=20*60)
         except:
             try:
+                print iPlanetDirectoryProStr
                 request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept", 'text/csv')
                 request_sparql.add_header("Content-Type", 'text/plain')
@@ -269,4 +270,4 @@ def SaveFunction(Str,userIDstr,femoIdstr,jobIdstr):
     return
 if __name__ == "__main__":
     #app.run(host="127.0.0.1", port=int("80"), debug=True)
-    app.run()
+    app.run(debug=True)
