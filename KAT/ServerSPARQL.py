@@ -39,8 +39,8 @@ def api_message():
         except:
             return jsonify(result="Incorrect JSON labels"), 400
 
-        #SPARQLquery=SPARQLquery.replace("\\","")
-        #SPARQLquery=SPARQLquery[:-1]
+        # SPARQLquery=SPARQLquery.replace("\\","")
+        # SPARQLquery=SPARQLquery[:-1]
 
         #Collect Header information
         try:
@@ -140,10 +140,10 @@ def api_message():
                     tempTimeStamp[0:Temp[1]] = TimeStamp[tprev:tprev+Temp[1]]
                     Data[Temp[0]] = np.transpose(tempData)
                     Data[2*i+1] = np.transpose(tempTimeStamp)
-                tprev = Temp[1]+tprev        ####
+                tprev = Temp[1]+tprev
         except Exception as e:
-            print(e)
-            Str="Unable to obtain data from SPARQL Query"
+            print("Exception: "+e)
+            Str = "Unable to obtain data from SPARQL Query"
             SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Unable to obtain data from SPARQL Query"), 200
 
