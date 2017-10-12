@@ -142,7 +142,7 @@ def api_message():
                     Data[2*i+1] = np.transpose(tempTimeStamp)
                 tprev = Temp[1]+tprev
         except Exception as e:
-            print("Exception: "+e)
+            print(e)
             Str = "Unable to obtain data from SPARQL Query"
             SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Unable to obtain data from SPARQL Query"), 200
