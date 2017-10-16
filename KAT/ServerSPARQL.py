@@ -126,8 +126,10 @@ def api_message():
             for i in range(0, len(SensorUnique)):
                 Temp = SensorUnique[i]
                 if i == 0:
+                    print'h'
                     tempData = [None]*max(SensObsLen)
                     tempTimeStamp = [None]*max(SensObsLen)
+                    print 'hello'
                     tempData[tprev:tprev+Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[tprev:tprev+Temp[1]] = TimeStamp[tprev:tprev+Temp[1]]
                     Data=pd.DataFrame(np.transpose([tempData, tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
