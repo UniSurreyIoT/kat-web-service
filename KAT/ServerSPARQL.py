@@ -125,19 +125,17 @@ def api_message():
 
             for i in range(0, len(SensorUnique)):
                 Temp = SensorUnique[i]
-                if i == 0:
-                    print'h'
-                    tempData = [None]*max(SensObsLen)
-                    tempTimeStamp = [None]*max(SensObsLen)
-                    print 'hello'
+                if i == 0:                   
+                    tempData = [None]*int(max(SensObsLen))
+                    tempTimeStamp = [None]*int(max(SensObsLen))                  
                     tempData[tprev:tprev+Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[tprev:tprev+Temp[1]] = TimeStamp[tprev:tprev+Temp[1]]
                     Data=pd.DataFrame(np.transpose([tempData, tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
                 else:
                     del tempData
                     del tempTimeStamp
-                    tempData = [None]*max(SensObsLen)
-                    tempTimeStamp = [None]*max(SensObsLen)
+                    tempData = [None]*int(max(SensObsLen))
+                    tempTimeStamp = [None]*int(max(SensObsLen))
                     tempData[0:Temp[1]] = np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[0:Temp[1]] = TimeStamp[tprev:tprev+Temp[1]]
                     Data[Temp[0]] = np.transpose(tempData)
@@ -156,7 +154,7 @@ def api_message():
             Str="Either time stamp or data variable missing"
             SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Either time stamp or data variable missing"), 400
-
+	
         HeaderNames = list(Data.columns.values)
         Header = []
         for i in range(0, len(HeaderNames)/2):
@@ -180,16 +178,16 @@ def api_message():
                 SampleFreq[i] = 1/float((epoch2-epoch1))
 
             RealignSamplingFreq = min(SampleFreq)  # re-sample to the lowest sampling frequency
-            MinLength = min(SensObsLen)
+            MinLength =int(min(SensObsLen))
 
             for i in range(0, Dim):
                 DataFromSensor = list(Data.iloc[:, 2*i])
-                # carry out resample of the list
-                TempListDataNew = [np.float(ui) for ui in DataFromSensor]
-                ResampledData = resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))
-                MinLengthTemp = len(ResampledData)
+                # carry out resample of the list		
+                TempListDataNew = [np.float(ui) for ui in DataFromSensor]		
+                ResampledData = resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))		
+                MinLengthTemp =int(len(ResampledData))
                 if i == 0:
-                    DataResamp = pd.DataFrame(ResampledData[0:MinLength])
+                    DataResamp = pd.DataFrame(ResampledData[0:int(MinLength)])
                 else:
                     if MinLengthTemp < MinLength:
                         DataResamp.drop(DataResamp.index[[MinLengthTemp, MinLength]])
@@ -282,5 +280,5 @@ def SaveFunction(Str, userIDstr, femoIdstr, jobIdstr):
         return jsonify(result=["Unable to store/or confirm storage of processed data"]), 400
     return
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int("8081"), debug=True)
+    app.run(host="0.0.0.0", port=int("5000"), debug=True)
     # app.run(debug=True)

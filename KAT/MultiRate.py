@@ -5,7 +5,7 @@ from scipy import signal
 
 
 def downsample(s, n, phase=0):
-    return s[phase::n]
+    return s[int(phase)::int(n)]
 
 
 def upsample(s, n, phase=0):
@@ -31,7 +31,7 @@ def interp(s, r, l=4, alpha=0.5):
 
     b = signal.firwin(2*l*r+1, alpha/r);
     a = 1
-    return r*signal.lfilter(b, a, upsample(s, r))[r*l+1:-1]
+    return r*signal.lfilter(b, a, upsample(s, r))[int(r*l+1):-1]
 
 
 def resample(s, p, q, h=None):
@@ -71,18 +71,17 @@ def resample(s, p, q, h=None):
 
     #pre and postpad filter response
     nz_pre = numpy.floor(q - numpy.mod(l,q))
-    hpad = h[-lh+nz_pre:]
-
+    hpad = h[int(-lh+nz_pre):]
     offset = numpy.floor((l+nz_pre)/q)
     nz_post = 0;
     while numpy.ceil(((ls-1)*p + nz_pre + lh + nz_post )/q ) - offset < ly:
         nz_post += 1
-    hpad = hpad[:lh + nz_pre + nz_post]
+    hpad = hpad[:int(lh + nz_pre + nz_post)]
 
     #filtering
     xfilt = upfirdn(s, hpad, p, q)
 
-    return xfilt[offset-1:offset-1+ly]
+    return xfilt[int(offset-1):int(offset-1+ly)]
 
 
 def upfirdn(s, h, p, q):
