@@ -39,8 +39,8 @@ def api_message():
         except:
             return jsonify(result="Incorrect JSON labels"), 400
 
-        # SPARQLquery=SPARQLquery.replace("\\","")
-        # SPARQLquery=SPARQLquery[:-1]
+        #SPARQLquery=SPARQLquery.replace("\\","")
+        #SPARQLquery=SPARQLquery[:-1]
 
         #Collect Header information
         try:
@@ -58,7 +58,7 @@ def api_message():
         except Exception as e:
             print(e)
             return jsonify(result="jobId Header not included"), 400
-        try:
+	try:
            iPlanetDirectoryProStr =str(request.headers['iPlanetDirectoryPro'])
         except Exception as e:
             print(e)
@@ -69,20 +69,19 @@ def api_message():
         method = "POST"
         handler = urllib2.HTTPHandler()
         opener = urllib2.build_opener(handler)
-
-        #print SPARQLquery
-        # print SPARQLendpoint[0]
+        SPARQLquery1=str(SPARQLquery[0])
+        SPARQLquery1=SPARQLquery1.replace("\\","")
         try:
-            request_sparql = urllib2.Request(str(SPARQLendpoint[0]), data=SPARQLquery[0])
+            request_sparql = urllib2.Request(str(SPARQLendpoint[0]), data = SPARQLquery1)
             request_sparql.add_header("Content-Type", 'text/plain')
             request_sparql.add_header("Accept", 'text/csv')
             request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
             request_sparql.get_method = lambda: method
             connection = opener.open(request_sparql, timeout=20*60)
         except Exception as e:
+	    print("this is an connection exception: ")
             print(e)
             try:
-                print iPlanetDirectoryProStr
                 request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept", 'text/csv')
                 request_sparql.add_header("Content-Type", 'text/plain')
@@ -166,15 +165,21 @@ def api_message():
             T2 = Data.iloc[2]
             SampleFreq = np.zeros(Dim)
             for i in range(0, Dim):  # calculate sample period for each sensor
-                try:
-                    pattern = '%Y-%m-%dT%H:%M:%S.%f'
-                except Exception as e:
-                    print(e)
-                    pattern = '%Y-%m-%dT%H:%M:%S'
+               
                 Temp1 = T1[2*i+1]
                 Temp2 = T2[2*i+1]
-                epoch1 = int(time.mktime(time.strptime(Temp1[:-1], pattern)))
-                epoch2 = int(time.mktime(time.strptime(Temp2[:-1], pattern)))
+                try:
+                    pattern = '%Y-%m-%dT%H:%M:%S.%f'
+                    epoch1 = int(time.mktime(time.strptime(Temp1[:-1], pattern)))
+                    epoch2 = int(time.mktime(time.strptime(Temp2[:-1], pattern)))
+
+                except Exception as e:
+                    print ("timestamp issue")
+                    print(e)
+                    pattern = '%Y-%m-%dT%H:%M:%S'
+                    epoch1 = int(time.mktime(time.strptime(Temp1[:-1], pattern)))
+                    epoch2 = int(time.mktime(time.strptime(Temp2[:-1], pattern)))
+
                 SampleFreq[i] = 1/float((epoch2-epoch1))
 
             RealignSamplingFreq = min(SampleFreq)  # re-sample to the lowest sampling frequency
