@@ -250,7 +250,9 @@ def api_message():
                         reqStore.add_header('jobId', jobIdstr)
                         response = urllib2.urlopen(reqStore, json.dumps(Out),timeout=60)
 
-                    except:
+                    except Exception as e:
+                        print("Exception for storage request: ")
+                        print(e)
                         return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
 
                     # return jsonify(result=[])
