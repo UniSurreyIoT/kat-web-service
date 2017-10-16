@@ -166,7 +166,11 @@ def api_message():
             T2 = Data.iloc[2]
             SampleFreq = np.zeros(Dim)
             for i in range(0, Dim):  # calculate sample period for each sensor
-                pattern = '%Y-%m-%dT%H:%M:%S.%f'
+                try:
+                    pattern = '%Y-%m-%dT%H:%M:%S.%f'
+                except Exception as e:
+                    print(e)
+                    pattern = '%Y-%m-%dT%H:%M:%S'
                 Temp1 = T1[2*i+1]
                 Temp2 = T2[2*i+1]
                 epoch1 = int(time.mktime(time.strptime(Temp1[:-1], pattern)))
