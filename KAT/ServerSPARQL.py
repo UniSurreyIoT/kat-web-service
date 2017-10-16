@@ -243,7 +243,7 @@ def api_message():
                     OutputCSV = Output.to_csv(index=True, header=True)
                     Out = {"result": OutputCSV}
                     try:
-                        reqStore = urllib2.Request('https://localhost:8080/experiment-result-store/')  #storage url will change.
+                        reqStore = urllib2.Request('http://localhost:8080/experiment-result-store/')  #storage url will change.
                         reqStore.add_header('Content-Type', 'application/json')
                         reqStore.add_header('userId', userIDstr)
                         reqStore.add_header('femoId', femoIdstr)
@@ -276,7 +276,7 @@ def download_file(filename):
 def SaveFunction(Str, userIDstr, femoIdstr, jobIdstr):
     try:
         Out = {"result": Str}
-        reqStore = urllib2.Request('https://localhost:8080/experiment-result-store/')  # storage url will change.
+        reqStore = urllib2.Request('http://localhost:8080/experiment-result-store/')  # storage url will change.
         reqStore.add_header('Content-Type', 'application/json')
         reqStore.add_header('userId', userIDstr)
         reqStore.add_header('femoId', femoIdstr)
