@@ -242,7 +242,7 @@ def api_message():
                 else:
                     OutputCSV = Output.to_csv(index=True, header=True)
                     Out = {"result": OutputCSV}
-                    '''try:
+                    try:
                         reqStore = urllib2.Request('https://localhost:8080/experiment-result-store/')  #storage url will change.
                         reqStore.add_header('Content-Type', 'application/json')
                         reqStore.add_header('userId', userIDstr)
@@ -251,11 +251,11 @@ def api_message():
                         response = urllib2.urlopen(reqStore, json.dumps(Out),timeout=60)
 
                     except:
-                        return jsonify(result=["Unable to store/or confirm storage of processed data"]),400'''
+                        return jsonify(result=["Unable to store/or confirm storage of processed data"]),400
 
                     # return jsonify(result=[])
                     # return jsonify(result=["Data Processed"]),200
-                    return jsonify(Out),200
+                    return jsonify(result=[]),200
             else:
                 Str="Incorrect Sequence of Methods"
                 SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
