@@ -110,11 +110,12 @@ def api_message():
                 if i==0:
                     tempData = [None]*max(SensObsLen)
                     tempTimeStamp = [None]*max(SensObsLen)
+                    print "hello"
                     tempData[tprev:tprev+Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[tprev:tprev+Temp[1]] =TimeStamp[tprev:tprev+Temp[1]]
+                    print "hello1"
                     Data = pd.DataFrame(np.transpose([tempData,tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
                 else:
-                    print "hello"
                     del tempData
                     del tempTimeStamp
                     tempData=[None]*max(SensObsLen)
