@@ -99,9 +99,8 @@ def api_message():
             tprev = 0             #previous time
             SensObsLen=np.zeros(len(SensorUnique))
             for i in range(0,len(SensorUnique)):
-                Temp=SensorUnique[i]
+                Temp = SensorUnique[i]
                 SensObsLen[i]=Temp[1]
-            print "hello"
             if min(SensObsLen)<1:
                 Str="Length of data too small"
                 return render_template('KAT_index.html',Result=Str)  #if data length too short return error
@@ -115,6 +114,7 @@ def api_message():
                     tempTimeStamp[tprev:tprev+Temp[1]] =TimeStamp[tprev:tprev+Temp[1]]
                     Data = pd.DataFrame(np.transpose([tempData,tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
                 else:
+                    print "hello"
                     del tempData
                     del tempTimeStamp
                     tempData=[None]*max(SensObsLen)
