@@ -257,7 +257,7 @@ def api_message():
 
                     # return jsonify(result=[])
                     # return jsonify(result=["Data Processed"]),200
-                    return jsonify(result=[]),200
+                    return jsonify(result=[]), 200
             else:
                 Str="Incorrect Sequence of Methods"
                 SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
@@ -286,6 +286,8 @@ def SaveFunction(Str, userIDstr, femoIdstr, jobIdstr):
     except:
         return jsonify(result=["Unable to store/or confirm storage of processed data"]), 400
     return
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int("5000"), debug=True)
+    app.run(host="0.0.0.0", port=int("8081"), debug=True)
     # app.run(debug=True)
