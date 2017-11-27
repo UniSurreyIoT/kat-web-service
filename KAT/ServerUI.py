@@ -83,7 +83,7 @@ def api_message():
 
         try:
             RawResponse = connection.read()
-            print RawResponse
+
         except:
             Str="Unable to retrieve data"
             return render_template('KAT_index.html',Result=Str)
@@ -108,18 +108,18 @@ def api_message():
             for i in range(0,len(SensorUnique)):
                 Temp=SensorUnique[i]
                 if i==0:
-                    tempData = [None]*max(SensObsLen)
-                    tempTimeStamp = [None]*max(SensObsLen)
-                    print "hello"
+                    tempData = [None]*int(max(SensObsLen))
+                    tempTimeStamp = [None]*int(max(SensObsLen))
+
                     tempData[tprev:tprev+Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[tprev:tprev+Temp[1]] =TimeStamp[tprev:tprev+Temp[1]]
-                    print "hello1"
+
                     Data = pd.DataFrame(np.transpose([tempData,tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
                 else:
                     del tempData
                     del tempTimeStamp
-                    tempData=[None]*max(SensObsLen)
-                    tempTimeStamp=[None]*max(SensObsLen)
+                    tempData=[None]*int(max(SensObsLen))
+                    tempTimeStamp=[None]*int(max(SensObsLen))
                     tempData[0:Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[0:Temp[1]] =TimeStamp[tprev:tprev+Temp[1]]
                     Data[Temp[0]] = np.transpose(tempData)
@@ -158,7 +158,7 @@ def api_message():
 
 
             RealignSamplingFreq= min(SampleFreq) #resample to the lowest sampling frequency
-            MinLength=min(SensObsLen)
+            MinLength=int(min(SensObsLen))
 
             for i in range(0,Dim):
                 DataFromSensor=list(Data.iloc[:,2*i])
@@ -178,7 +178,7 @@ def api_message():
             return render_template('KAT_index.html',Result=Str)
 
         #########################################################################################
-        print 'hello'
+
         am.CollectData(Dim,DataResamp)
         #initialiase the methods to send
         N=len(Methods)
