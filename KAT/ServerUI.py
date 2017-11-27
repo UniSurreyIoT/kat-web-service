@@ -83,6 +83,7 @@ def api_message():
 
         try:
             RawResponse = connection.read()
+            print RawResponse
         except:
             Str="Unable to retrieve data"
             return render_template('KAT_index.html',Result=Str)
