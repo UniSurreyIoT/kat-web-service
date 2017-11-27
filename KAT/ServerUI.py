@@ -101,7 +101,7 @@ def api_message():
             for i in range(0,len(SensorUnique)):
                 Temp=SensorUnique[i]
                 SensObsLen[i]=Temp[1]
-
+            print "hello"
             if min(SensObsLen)<1:
                 Str="Length of data too small"
                 return render_template('KAT_index.html',Result=Str)  #if data length too short return error
@@ -109,11 +109,11 @@ def api_message():
             for i in range(0,len(SensorUnique)):
                 Temp=SensorUnique[i]
                 if i==0:
-                    tempData=[None]*max(SensObsLen)
-                    tempTimeStamp=[None]*max(SensObsLen)
+                    tempData = [None]*max(SensObsLen)
+                    tempTimeStamp = [None]*max(SensObsLen)
                     tempData[tprev:tprev+Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[tprev:tprev+Temp[1]] =TimeStamp[tprev:tprev+Temp[1]]
-                    Data=pd.DataFrame(np.transpose([tempData,tempTimeStamp]),columns=[Temp[0],'TimeStamp'+str(i+1)])
+                    Data = pd.DataFrame(np.transpose([tempData,tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
                 else:
                     del tempData
                     del tempTimeStamp
@@ -121,11 +121,11 @@ def api_message():
                     tempTimeStamp=[None]*max(SensObsLen)
                     tempData[0:Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[0:Temp[1]] =TimeStamp[tprev:tprev+Temp[1]]
-                    Data[Temp[0]]=np.transpose(tempData)
+                    Data[Temp[0]] = np.transpose(tempData)
                     Data[2*i+1]=np.transpose(tempTimeStamp)
                 tprev=Temp[1]+tprev        ####
         except:
-            Str="Unable to obtain data from SPARQL Query"
+            Str = "Unable to obtain data from SPARQL Query"
             return render_template('KAT_index.html',Result=Str)
 
         if (len(Data.iloc[1]) % 2 == 0):  #check to see if number of coluns is even
