@@ -41,126 +41,6 @@
 
     <form action="/analytics-toolkit/results", method="POST">
         <h1>Input</h1>
-        <h5>Methods and Parameters</h5>
-
-         <table style="text-align: left;">
-                        <tbody>
-                            <tr>
-                                <td>Method 1:</td>
-                                <td></td>
-                                <td>
-                                    <select name="method1" id="hasMethod1"  title='choose method to apply'>
-                                        <option value="Non">Choose..</option>
-                                        <option value="Non">None</option>
-                                        <option value="Outlier">Outlier</option>
-                                        <option value="FilterData">Filter Data</option>
-                                        <option value="Kmeans">K-Means</option>
-                                        <option value="PCA">Principal Component Analysis</option>
-                                        <option value="LinReg">Linear Regression</option>
-                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
-                                        <option value="FFT">Fast Fourier Transform</option>
-                                        <option value="Periodogram">Periodogram</option>
-                                        <option value="Correlation">Correlation</option>
-                                    </select>
-                                </td>
-                                <td></td>
-                                <td>Parameters:</td>
-                                <td></td>
-                                <td><input name="parameter1" id="parameter1" size="10"
-                                           title='Parameters comma separated e.g. 3,G,10'>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-
-
-          <tbody>
-                            <tr>
-                                <td>Method 2:</td>
-                                <td></td>
-                                <td>
-                                    <select name="method2" id="hasMethod2"  title='choose method to apply'>
-                                        <option value="Non">Choose..</option>
-                                        <option value="Non">None</option>
-                                        <option value="Outlier">Outlier</option>
-                                        <option value="FilterData">Filter Data</option>
-                                        <option value="Kmeans">K-Means</option>
-                                        <option value="PCA">Principal Component Analysis</option>
-                                        <option value="LinReg">Linear Regression</option>
-                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
-                                        <option value="FFT">Fast Fourier Transform</option>
-                                        <option value="Periodogram">Periodogram</option>
-                                        <option value="Correlation">Correlation</option>
-                                    </select>
-                                </td>
-                                <td></td>
-                                <td>Parameters:</td>
-                                <td></td>
-                                <td><input name="parameter2" id="parameter2" size="10"
-                                           title='Parameters comma separated e.g. 3,G,10'>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-
-                       <tbody>
-                            <tr>
-                                <td>Method 3:</td>
-                                <td></td>
-                                <td>
-                                    <select name="method3" id="hasMethod3" title='choose method to apply'>
-                                        <option value="Non">Choose..</option>
-                                        <option value="Non">None</option>
-                                        <option value="Outlier">Outlier</option>
-                                        <option value="FilterData">Filter Data</option>
-                                        <option value="Kmeans">K-Means</option>
-                                        <option value="PCA">Principal Component Analysis</option>
-                                        <option value="LinReg">Linear Regression</option>
-                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
-                                        <option value="FFT">Fast Fourier Transform</option>
-                                        <option value="Periodogram">Periodogram</option>
-                                        <option value="Correlation">Correlation</option>
-                                    </select>
-                                </td>
-                                <td></td>
-                                <td>Parameters:</td>
-                                <td></td>
-                                <td><input name="parameter3" id="parameter3" size="10"
-                                           title='Parameters comma separated e.g. 3,G,10'>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-
-                       <tbody>
-                            <tr>
-                                <td>Method 4:</td>
-                                <td></td>
-                                <td>
-                                    <select name="method4" id="hasMethod4" title='choose method to apply'>
-                                        <option value="Non">Choose..</option>
-                                        <option value="Non">None</option>
-                                        <option value="Outlier">Outlier</option>
-                                        <option value="FilterData">Filter Data</option>
-                                        <option value="Kmeans">K-Means</option>
-                                        <option value="PCA">Principal Component Analysis</option>
-                                        <option value="LinReg">Linear Regression</option>
-                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
-                                        <option value="FFT">Fast Fourier Transform</option>
-                                        <option value="Periodogram">Periodogram</option>
-                                        <option value="Correlation">Correlation</option>
-                                    </select>
-                                </td>
-                                <td></td>
-                                <td>Parameters:</td>
-                                <td></td>
-                                <td><input name="parameter4" id="parameter4" size="10"
-                                           title='Parameters comma separated e.g. 3,G,10'>
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
 
         <h5>SPARQL Query</h5>
         <textarea name="myTextBox2" cols="100" rows="10"  style="resize:none">PREFIX iot-lite: <http://purl.oclc.org/NET/UNIS/fiware/iot-lite#>
@@ -193,8 +73,8 @@ WHERE {
     ?observation ssn:observationSamplingTime ?instant .
     ?instant time:inXSDDateTime ?dateTime .
     FILTER (
-         ( xsd:dateTime(?dateTime) > xsd:dateTime("2017-11-17T14:10:00Z"))
-      && ( xsd:dateTime(?dateTime) < xsd:dateTime("2017-11-27T23:10:00Z"))
+         ( xsd:dateTime(?dateTime) > xsd:dateTime("2017-11-01T00:00:00Z"))
+      && ( xsd:dateTime(?dateTime) < xsd:dateTime("2017-11-30T23:59:59Z"))
       ) .
   FILTER (
        (xsd:double(?lat) >= "0"^^xsd:double)
@@ -206,6 +86,128 @@ WHERE {
 
         </textarea>
         <br />
+        <h5>Methods and Parameters</h5>
+
+         <table style="text-align: left;">
+                        <tbody>
+                            <tr>
+                                <td>Method 1:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method1" id="hasMethod1"  title='choose method to apply'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter1" id="parameter1" size="15"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+
+          <tbody>
+                            <tr>
+                                <td>Method 2:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method2" id="hasMethod2"  title='choose method to apply'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter2" id="parameter2" size="15"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+                       <tbody>
+                            <tr>
+                                <td>Method 3:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method3" id="hasMethod3" title='choose method to apply'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter3" id="parameter3" size="15"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+                       <tbody>
+                            <tr>
+                                <td>Method 4:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method4" id="hasMethod4" title='choose method to apply'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter4" id="parameter4" size="15"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+        <br />
+
         <!--<h5>SPARQL Endpoint</h5>
         <textarea name="myTextBox3" cols="100" rows="2" readonly style="resize:none">https://platform-dev.fiesta-iot.eu/iot-registry/api/queries/execute/global</textarea>
         <br />-->

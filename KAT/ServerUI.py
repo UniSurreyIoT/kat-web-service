@@ -1,22 +1,22 @@
-from flask import Flask, request, json, url_for, redirect, send_from_directory, send_file,jsonify,abort,render_template
-import random, httplib, urllib, os, urllib2, csv, uuid
+from flask import Flask, request, json, jsonify, render_template
+import urllib2
+import os
 import pandas as pd
 import numpy as np
 from MultiRate import resample
-#from PyQt4 import QtCore, QtGui
 import AlgorithmManager as amc
-import werkzeug.exceptions as ex
-app = Flask(__name__)
-import  datetime, time
-UPLOAD_FOLDER = os.path.expanduser('~') + '/Desktop/DA_GUI/untitled1/Flask/preproc1/'
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-#app.run(host="127.0.0.1", port=int("80"), debug=True)
+import time
 import sys
 if sys.version_info[0] < 3:
     from StringIO import StringIO
 else:
     from io import StringIO
-from collections import Counter
+    from collections import Counter
+
+app = Flask(__name__)
+
+UPLOAD_FOLDER = os.path.expanduser('~') + '/Desktop/DA_GUI/untitled1/Flask/preproc1/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/analytics-toolkit')
@@ -25,13 +25,14 @@ def root1():
     return render_template('KAT_index.html')
 
 
-@app.route('/analytics-toolkit/results', methods = ['POST'])
+@app.route('/analytics-toolkit/results', methods=['POST'])
 def api_message():
-        am=amc.AlgorithmManager()
+        am = amc.AlgorithmManager()
     ###json
-        data= request.form
-        try:  #Check to see if JSON format is correct
-                method1=str(data['method1'])
+        data = request.form
+        # Check to see if JSON format is correct
+        try:
+                method1 = str(data['method1'])
                 method2=str(data['method2'])
                 method3=str(data['method3'])
                 method4=str(data['method4'])
@@ -44,10 +45,10 @@ def api_message():
                 return render_template('KAT_index.html', Result="Incorrect JSON Format")
 
         try:
-            Methods=[method1,method2,method3,method4]
-            Parameters=[parameter1,parameter2,parameter3,parameter4]
+            Methods = [method1,method2,method3,method4]
+            Parameters = [parameter1,parameter2,parameter3,parameter4]
         except:
-            return  render_template('KAT_index.html', Result="Incorrect JSON Labels")
+            return render_template('KAT_index.html', Result="Incorrect JSON Labels")
 
 
 
@@ -57,8 +58,8 @@ def api_message():
         handler = urllib2.HTTPHandler()
         opener = urllib2.build_opener(handler)
 
-        iPlanetDirectoryProStr="AQIC5wM2LY4SfcyR8RgVHVfeuigA_rC4XbuiNHxc83yhug4.*AAJTSQACMDEAAlNLABMxMDcwOTI2MDg3MTM4MzQ1MjYzAAJTMQAA*"
-        SPARQLendpoint="http://localhost:8080/iot-registry/api/queries/execute/global"
+        iPlanetDirectoryProStr = "AQIC5wM2LY4SfcyR8RgVHVfeuigA_rC4XbuiNHxc83yhug4.*AAJTSQACMDEAAlNLABMxMDcwOTI2MDg3MTM4MzQ1MjYzAAJTMQAA*"
+        SPARQLendpoint = "http://localhost:8080/iot-registry/api/queries/execute/global"
 
         try:
             request_sparql = urllib2.Request(SPARQLendpoint, data=SPARQLquery)
@@ -250,6 +251,9 @@ def SaveFunction(Str,userIDstr,femoIdstr,jobIdstr):
     except:
         return jsonify(result=["Unable to store/or confirm storage of processed data"]), 400
     return
+
+
 if __name__ == "__main__":
+
     app.run(host="0.0.0.0", port=int("5001"), debug=True)
     # app.run()
