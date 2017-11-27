@@ -41,13 +41,13 @@ def api_message():
                 parameter4=str(data['parameter4'])
                 SPARQLquery=str(data['myTextBox2'])
         except:
-                return render_template('KAT_index.html',Result="Incorrect JSON Format")
+                return render_template('KAT_index.html', Result="Incorrect JSON Format")
 
         try:
             Methods=[method1,method2,method3,method4]
             Parameters=[parameter1,parameter2,parameter3,parameter4]
         except:
-            return  render_template('KAT_index.html',Result="Incorrect JSON Labels")
+            return  render_template('KAT_index.html', Result="Incorrect JSON Labels")
 
 
 
@@ -58,17 +58,18 @@ def api_message():
         opener = urllib2.build_opener(handler)
 
         iPlanetDirectoryProStr="AQIC5wM2LY4SfcyR8RgVHVfeuigA_rC4XbuiNHxc83yhug4.*AAJTSQACMDEAAlNLABMxMDcwOTI2MDg3MTM4MzQ1MjYzAAJTMQAA*"
-        SPARQLendpoint="http://localhost:8080/iot-registry/api/queries/execute"
+        SPARQLendpoint="http://localhost:8080/iot-registry/api/queries/execute/global"
+
         try:
             request_sparql = urllib2.Request(SPARQLendpoint, data=SPARQLquery)
             request_sparql.add_header("Accept", 'text/csv')
             request_sparql.add_header("Content-Type", 'text/plain')
-            request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
+            # request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
             request_sparql.get_method = lambda: method
             connection = opener.open(request_sparql, timeout=20*60)
         except:
             try:
-                request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
+                request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute/global", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept", 'text/csv')
                 request_sparql.add_header("Content-Type", 'text/plain')
                 request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
