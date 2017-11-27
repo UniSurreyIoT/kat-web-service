@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   <!--   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/lumen/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/epoch/0.8.4/css/epoch.min.css" />
+    <link rel="stylesheet" href="/dash/css/styles.css"/> -->
+    <title>KAT UI</title>
+     <h1>Analytics Tool</h1>
+</head>
+<body>
+ <!--   <nav id="myNavmenu" class="navmenu navmenu-default navmenu-inverse navmenu-fixed-left offcanvas" role="navigation">
+        <a class="navmenu-brand" href="#">KAT UI</a>
+        <ul class="nav navmenu-nav">
+            <li class="active"><a href="#"><span class="glyphicon glyphicon-dashboard"></span> Real-time</a></li>
+            <li><a href="/dash/health/index.html"><span class="glyphicon glyphicon-heart"></span> Health</a></li>
+            <li><a href="/dash/historic/index.html"><span class="glyphicon glyphicon-stats"></span> Historic</a></li>
+        </ul>
+    </nav> -->
+
+  <!--  <div class="navbar navbar-default navbar-fixed-top">
+        <button type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".navmenu" data-canvas="body">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div> -->
+
+  <!--  <div class="container">
+        <h1>Input Data</h1>
+        <p class="lead">Last update: <span id="lastUpdate"></span></p>
+        <div class="col-xs-2">
+            <select class="form-control" id="resourceIdDropdown">
+                <option value="" disabled selected>Select Resource ID</option>
+            </select>
+        <div class="col-xs-10">
+            <div id="chartContainer" style="height: 400px"></div>
+        </div>
+    </div>-->
+
+    <form action="/analytics-toolkit/results", method="POST">
+        <h1>Input</h1>
+        <h5>Methods and Parameters</h5>
+
+         <table style="text-align: left;">
+                        <tbody>
+                            <tr>
+                                <td>Method 1:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method1" id="hasMethod1"  title='choose Class of Resource'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter1" id="parameter1" size="10"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+
+          <tbody>
+                            <tr>
+                                <td>Method 2:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method2" id="hasMethod2"  title='choose Class of Resource'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter2" id="parameter2" size="10"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+                       <tbody>
+                            <tr>
+                                <td>Method 3:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method3" id="hasMethod3" title='choose Class of Resource'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter3" id="parameter3" size="10"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+
+                       <tbody>
+                            <tr>
+                                <td>Method 4:</td>
+                                <td></td>
+                                <td>
+                                    <select name="method4" id="hasMethod4" title='choose Class of Resource'>
+                                        <option value="Non">Choose..</option>
+                                        <option value="Non">None</option>
+                                        <option value="Outlier">Outlier</option>
+                                        <option value="FilterData">Filter Data</option>
+                                        <option value="Kmeans">K-Means</option>
+                                        <option value="PCA">Principal Component Analysis</option>
+                                        <option value="LinReg">Linear Regression</option>
+                                        <option value="KNNreg">K-Nearest Neighbour Regression</option>
+                                        <option value="FFT">Fast Fourier Transform</option>
+                                        <option value="Periodogram">Periodogram</option>
+                                        <option value="Correlation">Correlation</option>
+                                    </select>
+                                </td>
+                                <td></td>
+                                <td>Parameters:</td>
+                                <td></td>
+                                <td><input name="parameter4" id="parameter4" size="10"
+                                           title='Parameters comma separated e.g. 3,G,10'>
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+        <h5>SPARQL Query</h5>
+        <textarea name="myTextBox2" cols="100" rows="10"  style="resize:none">PREFIX iot-lite: <http://purl.oclc.org/NET/UNIS/fiware/iot-lite#>
+PREFIX m3-lite: <http://purl.org/iot/vocab/m3-lite#>
+PREFIX ssn: <http://purl.oclc.org/NET/ssnx/ssn#>
+PREFIX geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#>
+PREFIX xsd:    <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dul: <http://www.loa.istc.cnr.it/ontologies/DUL.owl#>
+PREFIX time: <http://www.w3.org/2006/time#>
+PREFIX sics: <http://smart-ics.ee.surrey.ac.uk/fiesta-iot#>
+
+SELECT  ?sensingDevice ?dataValue ?dateTime
+WHERE {
+    ?sensingDevice a m3-lite:EnergyMeter .
+    ?sensingDevice iot-lite:hasQuantityKind ?qk .
+    ?qk a m3-lite:Power .
+    ?sensingDevice iot-lite:hasUnit ?unit .
+    ?unit a m3-lite:Watt .
+    ?sensingDevice iot-lite:isSubSystemOf ?device .
+    ?device a ssn:Device .
+    ?device ssn:onPlatform ?platform .
+    ?platform geo:location ?point .
+    ?point geo:lat ?lat .
+    ?point geo:long ?long .
+    ?observation ssn:observedBy ?sensingDevice .
+    ?observation ssn:observationResult ?sensorOutput .
+    ?sensorOutput ssn:hasValue ?obsValue .
+    ?obsValue dul:hasDataValue ?dataValue .
+    ?observation ssn:observationSamplingTime ?instant .
+    ?instant time:inXSDDateTime ?dateTime .
+    FILTER (
+         ( xsd:dateTime(?dateTime) > xsd:dateTime("2017-11-17T14:10:00Z"))
+      && ( xsd:dateTime(?dateTime) < xsd:dateTime("2017-11-17T23:10:00Z"))
+      ) .
+  FILTER (
+       (xsd:double(?lat) >= "0"^^xsd:double)
+    && (xsd:double(?lat) <= "60"^^xsd:double)
+    && ( xsd:double(?long) < "10"^^xsd:double)
+    && ( xsd:double(?long) > "-6"^^xsd:double)
+   )  .
+}ORDER BY ?sensingDevice ASC(?dateTime)
+
+        </textarea>
+        <br />
+        <!--<h5>SPARQL Endpoint</h5>
+        <textarea name="myTextBox3" cols="100" rows="2" readonly style="resize:none">https://platform-dev.fiesta-iot.eu/iot-registry/api/queries/execute/global</textarea>
+        <br />-->
+        <input type="submit" />
+    </form>
+
+    <form >
+        <h1>Output</h1>
+    <textarea name="myTextBox4" cols="100" rows="20" readonly  style="resize:none">{{Result}}</textarea>
+        <!--<div>{{Result}}</div>-->
+        <br />
+    </form>
+
+
+
+    <!--<iframe srcdoc={{Result}}>-->
+    <!--</iframe>-->
+        <!--<br />-->
+    <!--</form>-->
+        <!--<table>-->
+            <!--<thead>-->
+            <!--<tr>-->
+                <!--{% for Header in Headers %}-->
+                    <!--<td>-->
+                        <!--{{Header}}-->
+                    <!--</td>-->
+                <!--{% endfor %}-->
+            <!--</tr>-->
+            <!--</thead>-->
+            <!--<tbody>-->
+                <!--{% for D in Rows %}-->
+                    <!--<tr>-->
+                        <!--{% for R in D %}-->
+                            <!--<td>-->
+                                <!--{{R}}-->
+                            <!--</td>-->
+                    <!--{% endfor %}-->
+                    <!--</tr>-->
+                <!--{% endfor %}-->
+            <!--</tbody>-->
+        <!--</table>-->
+
+</body>
+</html>
