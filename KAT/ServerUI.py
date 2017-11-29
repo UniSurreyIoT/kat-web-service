@@ -7,11 +7,12 @@ from MultiRate import resample
 import AlgorithmManager as amc
 import time
 import sys
+from collections import Counter
 if sys.version_info[0] < 3:
     from StringIO import StringIO
 else:
     from io import StringIO
-    from collections import Counter
+
 
 app = Flask(__name__)
 
