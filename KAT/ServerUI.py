@@ -29,25 +29,25 @@ def root1():
 @app.route('/analytics-toolkit/results', methods=['POST'])
 def api_message():
         am = amc.AlgorithmManager()
-    ###json
+    # json
         data = request.form
         # Check to see if JSON format is correct
         try:
                 method1 = str(data['method1'])
-                method2=str(data['method2'])
-                method3=str(data['method3'])
-                method4=str(data['method4'])
-                parameter1=str(data['parameter1'])
-                parameter2=str(data['parameter2'])
-                parameter3=str(data['parameter3'])
-                parameter4=str(data['parameter4'])
-                SPARQLquery=str(data['myTextBox2'])
+                method2 = str(data['method2'])
+                method3 = str(data['method3'])
+                method4 = str(data['method4'])
+                parameter1 = str(data['parameter1'])
+                parameter2 = str(data['parameter2'])
+                parameter3 = str(data['parameter3'])
+                parameter4 = str(data['parameter4'])
+                SPARQLquery = str(data['myTextBox2'])
         except:
                 return render_template('KAT_index.html', Result="Incorrect JSON Format")
 
         try:
-            Methods = [method1,method2,method3,method4]
-            Parameters = [parameter1,parameter2,parameter3,parameter4]
+            Methods = [method1, method2, method3, method4]
+            Parameters = [parameter1, parameter2, parameter3, parameter4]
         except:
             return render_template('KAT_index.html', Result="Incorrect JSON Labels")
 
@@ -59,7 +59,7 @@ def api_message():
         handler = urllib2.HTTPHandler()
         opener = urllib2.build_opener(handler)
 
-        iPlanetDirectoryProStr = "AQIC5wM2LY4SfcyR8RgVHVfeuigA_rC4XbuiNHxc83yhug4.*AAJTSQACMDEAAlNLABMxMDcwOTI2MDg3MTM4MzQ1MjYzAAJTMQAA*"
+        # iPlanetDirectoryProStr = "AQIC5wM2LY4SfcyR8RgVHVfeuigA_rC4XbuiNHxc83yhug4.*AAJTSQACMDEAAlNLABMxMDcwOTI2MDg3MTM4MzQ1MjYzAAJTMQAA*"
         SPARQLendpoint = "http://localhost:8080/iot-registry/api/queries/execute/global"
 
         try:
@@ -71,15 +71,15 @@ def api_message():
             connection = opener.open(request_sparql, timeout=20*60)
         except:
             try:
-                request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute/global", data=SPARQLquery)
+                request_sparql_backup = urllib2.Request(SPARQLendpoint, data=SPARQLquery)
                 request_sparql_backup.add_header("Accept", 'text/csv')
                 request_sparql.add_header("Content-Type", 'text/plain')
-                request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
+                # request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
                 request_sparql_backup.get_method = lambda: method
-                connection =opener.open(request_sparql_backup, timeout=20)
+                connection = opener.open(request_sparql_backup, timeout=20)
             except:
-                Str="Unable to connect to SPARQL endpoint"
-                return render_template('KAT_index.html',Result=Str)
+                Str = "Unable to connect to SPARQL endpoint"
+                return render_template('KAT_index.html', Result=Str)
 
                 #return jsonify(result=[]),400
 
@@ -87,11 +87,12 @@ def api_message():
             RawResponse = connection.read()
 
         except:
-            Str="Unable to retrieve data"
-            return render_template('KAT_index.html',Result=Str)
+            Str = "Unable to retrieve data"
+            return render_template('KAT_index.html', Result=Str)
         try:
-        #####  convert data into correct format from original SPARQL CSV format
-            TESTDATA=StringIO(RawResponse)
+            # convert data into correct format from original SPARQL CSV format
+
+            TESTDATA = StringIO(RawResponse)
             df = pd.read_csv(TESTDATA, sep=",")
             ResList = list(df['sensingDevice'])
             DataV = list(df['dataValue'])
@@ -99,17 +100,17 @@ def api_message():
             C = Counter(ResList)
             SensorUnique = C.items()
             tprev = 0             #previous time
-            SensObsLen=np.zeros(len(SensorUnique))
-            for i in range(0,len(SensorUnique)):
+            SensObsLen = np.zeros(len(SensorUnique))
+            for i in range(0, len(SensorUnique)):
                 Temp = SensorUnique[i]
-                SensObsLen[i]=Temp[1]
-            if min(SensObsLen)<1:
-                Str="Length of data too small"
-                return render_template('KAT_index.html',Result=Str)  #if data length too short return error
+                SensObsLen[i] = Temp[1]
+            if min(SensObsLen) < 1:
+                Str = "Length of data too small"
+                return render_template('KAT_index.html', Result=Str)  #if data length too short return error
 
-            for i in range(0,len(SensorUnique)):
-                Temp=SensorUnique[i]
-                if i==0:
+            for i in range(0, len(SensorUnique)):
+                Temp = SensorUnique[i]
+                if i == 0:
                     tempData = [None]*int(max(SensObsLen))
                     tempTimeStamp = [None]*int(max(SensObsLen))
 
@@ -120,64 +121,64 @@ def api_message():
                 else:
                     del tempData
                     del tempTimeStamp
-                    tempData=[None]*int(max(SensObsLen))
-                    tempTimeStamp=[None]*int(max(SensObsLen))
-                    tempData[0:Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
-                    tempTimeStamp[0:Temp[1]] =TimeStamp[tprev:tprev+Temp[1]]
+                    tempData = [None]*int(max(SensObsLen))
+                    tempTimeStamp = [None]*int(max(SensObsLen))
+                    tempData[0:Temp[1]] = np.array(DataV[tprev:tprev+Temp[1]])
+                    tempTimeStamp[0:Temp[1]] = TimeStamp[tprev:tprev+Temp[1]]
                     Data[Temp[0]] = np.transpose(tempData)
-                    Data[2*i+1]=np.transpose(tempTimeStamp)
-                tprev=Temp[1]+tprev        ####
+                    Data[2*i+1] = np.transpose(tempTimeStamp)
+                tprev = Temp[1]+tprev
         except:
             Str = "Unable to obtain data from SPARQL Query"
-            return render_template('KAT_index.html',Result=Str)
+            return render_template('KAT_index.html', Result=Str)
 
-        if (len(Data.iloc[1]) % 2 == 0):  #check to see if number of coluns is even
-            Dim=len(Data.iloc[1])/2
+        if (len(Data.iloc[1]) % 2 == 0):  # check to see if number of coluns is even
+            Dim = len(Data.iloc[1])/2
 
         else:
-            Str="Either time stamp or data variable missing"
-            return render_template('KAT_index.html',Result=Str)
+            Str = "Either time stamp or data variable missing"
+            return render_template('KAT_index.html', Result=Str)
 
-
-        HeaderNames= list(Data.columns.values)
-        Header=[]
-        for i in range(0,len(HeaderNames)/2):
+        HeaderNames = list(Data.columns.values)
+        Header = []
+        for i in range(0, len(HeaderNames)/2):
             Header.append(HeaderNames[2*i])
 
 
         ###############function for resampling the data to the lowest sampling frequency
         try:
-            T1=Data.iloc[1]
-            T2=Data.iloc[2]
-            SampleFreq=np.zeros(Dim)
-            for i in range(0,Dim): #calcaulate sample period for each sensor
+            T1 = Data.iloc[1]
+            T2 = Data.iloc[2]
+            SampleFreq = np.zeros(Dim)
+            # calculate sample period for each sensor
+            for i in range(0, Dim):
                 pattern = '%Y-%m-%dT%H:%M:%S'
-                Temp1=T1[2*i+1]
-                Temp2=T2[2*i+1]
+                Temp1 = T1[2*i+1]
+                Temp2 = T2[2*i+1]
                 epoch1 = int(time.mktime(time.strptime(Temp1[:-1], pattern)))
                 epoch2 = int(time.mktime(time.strptime(Temp2[:-1], pattern)))
-                SampleFreq[i]=1/float((epoch2-epoch1))
+                SampleFreq[i] = 1/float((epoch2-epoch1))
 
-
-            RealignSamplingFreq= min(SampleFreq) #resample to the lowest sampling frequency
-            MinLength=int(min(SensObsLen))
+            # resample to the lowest sampling frequency
+            RealignSamplingFreq = min(SampleFreq)
+            MinLength = int(min(SensObsLen))
 
             for i in range(0,Dim):
-                DataFromSensor=list(Data.iloc[:,2*i])
-                #carry out resample of the list
-                TempListDataNew=[np.float(ui) for ui in DataFromSensor]
-                ResampledData= resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))
-                MinLengthTemp=len(ResampledData)
-                if i==0:
-                    DataResamp=pd.DataFrame(ResampledData[0:MinLength])
+                DataFromSensor=list(Data.iloc[:, 2*i])
+                # carry out resample of the list
+                TempListDataNew = [np.float(ui) for ui in DataFromSensor]
+                ResampledData = resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))
+                MinLengthTemp =len(ResampledData)
+                if i == 0:
+                    DataResamp = pd.DataFrame(ResampledData[0:MinLength])
                 else:
                     if MinLengthTemp<MinLength:
-                        DataResamp.drop(DataResamp.index[[MinLengthTemp,MinLength]])
-                        MinLength=MinLengthTemp
-                    DataResamp[i]=ResampledData[0:MinLength]
+                        DataResamp.drop(DataResamp.index[[MinLengthTemp, MinLength]])
+                        MinLength = MinLengthTemp
+                    DataResamp[i] = ResampledData[0:MinLength]
         except:
-            Str="Unable to Resample Data"
-            return render_template('KAT_index.html',Result=Str)
+            Str ="Unable to Resample Data"
+            return render_template('KAT_index.html', Result=Str)
 
         #########################################################################################
 

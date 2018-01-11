@@ -20,7 +20,7 @@ app = Flask(__name__)
 
 @app.route('/AnalyseData', methods=['POST'])
 def api_message():
-    am=amc.AlgorithmManager()
+    am = amc.AlgorithmManager()
     # json
     if request.headers['Content-Type'] == 'application/json':
         try:  # Check to see if JSON format is correct
@@ -28,21 +28,21 @@ def api_message():
         except:
             return jsonify(result="Incorrect JSON Format"), 400
 
-        Requests_parsed=json.loads(Requests)
+        Requests_parsed = json.loads(Requests)
 
         # Collect the methods and parameters from the http request.
         try:
-            Methods=Requests_parsed['Method']
-            Parameters=Requests_parsed['Parameters']
-            SPARQLquery=Requests_parsed['SPARQLquery']
-            SPARQLendpoint=Requests_parsed['SPARQLendpoint']
+            Methods = Requests_parsed['Method']
+            Parameters = Requests_parsed['Parameters']
+            SPARQLquery = Requests_parsed['SPARQLquery']
+            SPARQLendpoint = Requests_parsed['SPARQLendpoint']
         except:
             return jsonify(result="Incorrect JSON labels"), 400
 
         #SPARQLquery=SPARQLquery.replace("\\","")
         #SPARQLquery=SPARQLquery[:-1]
 
-        #Collect Header information
+        # Collect Header information
         try:
             userIDstr = str(request.headers['userId'])
         except Exception as e:
@@ -54,12 +54,12 @@ def api_message():
             print(e)
             return jsonify(result="femoId Header not included"), 400
         try:
-            jobIdstr=str(request.headers['jobId'])
+            jobIdstr = str(request.headers['jobId'])
         except Exception as e:
             print(e)
             return jsonify(result="jobId Header not included"), 400
 	try:
-           iPlanetDirectoryProStr =str(request.headers['iPlanetDirectoryPro'])
+           iPlanetDirectoryProStr = str(request.headers['iPlanetDirectoryPro'])
         except Exception as e:
             print(e)
             return jsonify(result="iPlanetDirectoryPro  Header not included"), 400
@@ -69,10 +69,10 @@ def api_message():
         method = "POST"
         handler = urllib2.HTTPHandler()
         opener = urllib2.build_opener(handler)
-        SPARQLquery1=str(SPARQLquery[0])
-        SPARQLquery1=SPARQLquery1.replace("\\","")
+        SPARQLquery1 = str(SPARQLquery[0])
+        SPARQLquery1 = SPARQLquery1.replace("\\", "")
         try:
-            request_sparql = urllib2.Request(str(SPARQLendpoint[0]), data = SPARQLquery1)
+            request_sparql = urllib2.Request(str(SPARQLendpoint[0]), data=SPARQLquery1)
             request_sparql.add_header("Content-Type", 'text/plain')
             request_sparql.add_header("Accept", 'text/csv')
             request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
@@ -82,12 +82,12 @@ def api_message():
 	    print("this is an connection exception: ")
             print(e)
             try:
-                request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute", data=SPARQLquery)
+                request_sparql_backup = urllib2.Request("http://localhost:8080/iot-registry/api/queries/execute/global", data=SPARQLquery)
                 request_sparql_backup.add_header("Accept", 'text/csv')
                 request_sparql.add_header("Content-Type", 'text/plain')
                 request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
                 request_sparql_backup.get_method = lambda: method
-                connection =opener.open(request_sparql_backup, timeout=20)
+                connection = opener.open(request_sparql_backup, timeout=20)
             except Exception as e:
                 print(e)
                 Str = "Unable to connect to SPARQL endpoint"
@@ -98,12 +98,12 @@ def api_message():
             RawResponse = connection.read()
         except Exception as e:
             print(e)
-            Str="Unable to retrieve data"
-            SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
+            Str ="Unable to retrieve data"
+            SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Unable to retrieve data from IoT Registry"), 200
         try:
             # convert data into correct format from original SPARQL CSV format
-            TESTDATA=StringIO(RawResponse)
+            TESTDATA = StringIO(RawResponse)
             df = pd.read_csv(TESTDATA, sep=",")
             # print df
             ResList = list(df['sensingDevice'])
@@ -112,10 +112,10 @@ def api_message():
             C = Counter(ResList)
             SensorUnique = C.items()
             tprev = 0             # previous time
-            SensObsLen=np.zeros(len(SensorUnique))
-            for i in range(0,len(SensorUnique)):
+            SensObsLen = np.zeros(len(SensorUnique))
+            for i in range(0, len(SensorUnique)):
                 Temp = SensorUnique[i]
-                SensObsLen[i]=Temp[1]
+                SensObsLen[i] = Temp[1]
 
             if min(SensObsLen) < 10:
                 Str = "Length of data too small"
@@ -129,7 +129,7 @@ def api_message():
                     tempTimeStamp = [None]*int(max(SensObsLen))                  
                     tempData[tprev:tprev+Temp[1]]=np.array(DataV[tprev:tprev+Temp[1]])
                     tempTimeStamp[tprev:tprev+Temp[1]] = TimeStamp[tprev:tprev+Temp[1]]
-                    Data=pd.DataFrame(np.transpose([tempData, tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
+                    Data = pd.DataFrame(np.transpose([tempData, tempTimeStamp]), columns=[Temp[0], 'TimeStamp'+str(i+1)])
                 else:
                     del tempData
                     del tempTimeStamp
@@ -150,7 +150,7 @@ def api_message():
             Dim = len(Data.iloc[1])/2
 
         else:
-            Str="Either time stamp or data variable missing"
+            Str = "Either time stamp or data variable missing"
             SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Either time stamp or data variable missing"), 400
 	
@@ -183,14 +183,14 @@ def api_message():
                 SampleFreq[i] = 1/float((epoch2-epoch1))
 
             RealignSamplingFreq = min(SampleFreq)  # re-sample to the lowest sampling frequency
-            MinLength =int(min(SensObsLen))
+            MinLength = int(min(SensObsLen))
 
             for i in range(0, Dim):
                 DataFromSensor = list(Data.iloc[:, 2*i])
                 # carry out resample of the list		
                 TempListDataNew = [np.float(ui) for ui in DataFromSensor]		
                 ResampledData = resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))		
-                MinLengthTemp =int(len(ResampledData))
+                MinLengthTemp = int(len(ResampledData))
                 if i == 0:
                     DataResamp = pd.DataFrame(ResampledData[0:int(MinLength)])
                 else:
@@ -209,8 +209,8 @@ def api_message():
         am.CollectData(Dim, DataResamp)
         # initialiase the methods to send
         N = len(Methods)
-        MethodSend = ["Non","Non","Non","Non","Non","Non","Non","Non"]
-        ParameterSend = [0,0,0,0,0,0,0,0]
+        MethodSend = ["Non", "Non", "Non", "Non", "Non", "Non", "Non", "Non"]
+        ParameterSend = [0, 0, 0, 0, 0, 0, 0, 0]
 
         if len(Methods) == len(Parameters):
             for item in range(0, N):
@@ -248,7 +248,7 @@ def api_message():
                         reqStore.add_header('userId', userIDstr)
                         reqStore.add_header('femoId', femoIdstr)
                         reqStore.add_header('jobId', jobIdstr)
-                        response = urllib2.urlopen(reqStore, json.dumps(Out),timeout=60)
+                        response = urllib2.urlopen(reqStore, json.dumps(Out), timeout=60)
 
                     except Exception as e:
                         print("Exception for storage request: ")
@@ -259,12 +259,15 @@ def api_message():
                     # return jsonify(result=["Data Processed"]),200
                     return jsonify(result=[]), 200
             else:
-                Str="Incorrect Sequence of Methods"
-                SaveFunction(Str,userIDstr,femoIdstr,jobIdstr)
-                return jsonify(result="Incorrect Sequence of Methods"),400
-        else: return jsonify(result="No. of parameters not equal to the No. of methods"),400
+                Str ="Incorrect Sequence of Methods"
+                SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+                return jsonify(result="Incorrect Sequence of Methods"), 400
+        else:
+            return jsonify(result="No. of parameters not equal to the No. of methods"), 400
     else:
-        return jsonify(result="Content In the Incorrect Format"),400
+        return jsonify(result="Content In the Incorrect Format"), 400
+
+
 '''
 @app.route('/AnalysedDataRetrieval/<path:filename>', methods=['GET', 'POST'])
 def download_file(filename):
