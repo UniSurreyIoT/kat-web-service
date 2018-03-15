@@ -1,4 +1,4 @@
-from flask import Flask, request, json, jsonify
+from flask import Flask, request, json, jsonify, Response
 import urllib2
 import pandas as pd
 import numpy as np
@@ -508,7 +508,8 @@ def analyse_direct():
                     # return jsonify(result=[])
                     # return jsonify(result=["Data Processed"]),200
                     # return jsonify(result=[]), 200
-                    return OutputCSV, 200
+                    # return OutputCSV, 200
+                    return Response(OutputCSV, mimetype='text/csv')
 
             else:
                 Str ="Incorrect Sequence of Methods"
