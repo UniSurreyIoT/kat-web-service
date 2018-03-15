@@ -145,7 +145,7 @@ def api_message():
             Header.append(HeaderNames[2*i])
 
 
-        ###############function for resampling the data to the lowest sampling frequency
+        # function for resampling the data to the lowest sampling frequency
         try:
             T1 = Data.iloc[1]
             T2 = Data.iloc[2]
