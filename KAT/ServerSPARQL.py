@@ -28,6 +28,8 @@ def api_message():
         except:
             return jsonify(result="Incorrect JSON Format"), 400
 
+        # token = request.headers.get('iPlanetProDirectory')
+
         Requests_parsed = json.loads(Requests)
 
         # Collect the methods and parameters from the http request.
@@ -73,6 +75,7 @@ def api_message():
         SPARQLquery1 = SPARQLquery1.replace("\\", "")
         try:
             request_sparql = urllib2.Request(str(SPARQLendpoint[0]), data=SPARQLquery1)
+            # request_sparql.add_header("iPlanetProDirectory", token)
             request_sparql.add_header("Content-Type", 'text/plain')
             request_sparql.add_header("Accept", 'text/csv')
             request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
@@ -202,7 +205,7 @@ def api_message():
             print(e)
             Str = "Unable to Resample Data"
             SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
-            return jsonify(result = "Unable to Resample Data"), 400
+            return jsonify(result="Unable to Resample Data"), 400
 
         #########################################################################################
 
@@ -267,7 +270,7 @@ def api_message():
     else:
         return jsonify(result="Content In the Incorrect Format"), 400
 
-
+# Analyse data direct
 @app.route('/analyse-data-direct', methods=['POST'])
 def analyse_direct():
     am = amc.AlgorithmManager()
@@ -277,6 +280,8 @@ def analyse_direct():
             Requests = json.dumps(request.json)
         except:
             return jsonify(result="Incorrect JSON Format"), 400
+
+        # token = request.headers.get('iPlanetProDirectory')
 
         Requests_parsed = json.loads(Requests)
 
@@ -293,21 +298,21 @@ def analyse_direct():
         #SPARQLquery=SPARQLquery[:-1]
 
         # Collect Header information
-        try:
-            userIDstr = str(request.headers['userId'])
-        except Exception as e:
-            print(e)
-            return jsonify(result="userId Header not included"), 400
-        try:
-            femoIdstr = str(request.headers['femoId'])
-        except Exception as e:
-            print(e)
-            return jsonify(result="femoId Header not included"), 400
-        try:
-            jobIdstr = str(request.headers['jobId'])
-        except Exception as e:
-            print(e)
-            return jsonify(result="jobId Header not included"), 400
+        # try:
+        #     userIDstr = str(request.headers['userId'])
+        # except Exception as e:
+        #     print(e)
+        #     return jsonify(result="userId Header not included"), 400
+        # try:
+        #     femoIdstr = str(request.headers['femoId'])
+        # except Exception as e:
+        #     print(e)
+        #     return jsonify(result="femoId Header not included"), 400
+        # try:
+        #     jobIdstr = str(request.headers['jobId'])
+        # except Exception as e:
+        #     print(e)
+        #     return jsonify(result="jobId Header not included"), 400
 	try:
            iPlanetDirectoryProStr = str(request.headers['iPlanetDirectoryPro'])
         except Exception as e:
@@ -341,7 +346,7 @@ def analyse_direct():
             except Exception as e:
                 print(e)
                 Str = "Unable to connect to SPARQL endpoint"
-                SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+                # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
                 return jsonify(result="Unable to connect to SPARQL endpoint"), 400
 
         try:
@@ -349,7 +354,7 @@ def analyse_direct():
         except Exception as e:
             print(e)
             Str ="Unable to retrieve data"
-            SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+            # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Unable to retrieve data from IoT Registry"), 200
         try:
             # convert data into correct format from original SPARQL CSV format
@@ -369,7 +374,7 @@ def analyse_direct():
 
             if min(SensObsLen) < 10:
                 Str = "Length of data too small"
-                SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+                # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
                 return jsonify(result="Length of data too small"), 400  # if data length too short return error
 
             for i in range(0, len(SensorUnique)):
@@ -393,7 +398,7 @@ def analyse_direct():
         except Exception as e:
             print(e)
             Str = "Unable to obtain data from SPARQL Query"
-            SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+            # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Unable to obtain data from SPARQL Query"), 200
 
         if len(Data.iloc[1]) % 2 == 0:  # check to see if number of columns is even
@@ -401,7 +406,7 @@ def analyse_direct():
 
         else:
             Str = "Either time stamp or data variable missing"
-            SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+            # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result="Either time stamp or data variable missing"), 400
 
         HeaderNames = list(Data.columns.values)
@@ -439,6 +444,7 @@ def analyse_direct():
                 DataFromSensor = list(Data.iloc[:, 2*i])
                 # carry out resample of the list
                 TempListDataNew = [np.float(ui) for ui in DataFromSensor]
+                print "hello1"
                 ResampledData = resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))
                 MinLengthTemp = int(len(ResampledData))
                 if i == 0:
@@ -451,7 +457,7 @@ def analyse_direct():
         except Exception as e:
             print(e)
             Str = "Unable to Resample Data"
-            SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+            # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
             return jsonify(result = "Unable to Resample Data"), 400
 
         #########################################################################################
@@ -473,7 +479,7 @@ def analyse_direct():
             if int(FLagMethodNames[0]) > 0:
                 ErrorString = 'Incorrect Method Name: ' + MethodSend[int(FLagMethodNames[0])-1]
                 Str = ErrorString
-                SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+                # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
                 return jsonify(result=ErrorString), 400
             FlagSequence = am.CheckTechniqueSequence()
             if int(FlagSequence[0]) == 0:  # Error due to incorrect parameters.
@@ -483,11 +489,11 @@ def analyse_direct():
                     Output = am.MetaInformation(Header, Output)
                 except:
                     Str = "Error"
-                    SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+                    # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
                     return jsonify(result="Error"), 400
                 if Output is None:
                     Str = "Incorrect Method Parameter Specification"
-                    SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+                    # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
                     return jsonify(result="Incorrect Method Parameter Specification"), 400
                 else:
                     OutputCSV = Output.to_csv(index=True, header=True)
@@ -513,7 +519,7 @@ def analyse_direct():
 
             else:
                 Str ="Incorrect Sequence of Methods"
-                SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
+                # SaveFunction(Str, userIDstr, femoIdstr, jobIdstr)
                 return jsonify(result="Incorrect Sequence of Methods"), 400
         else:
             return jsonify(result="No. of parameters not equal to the No. of methods"), 400

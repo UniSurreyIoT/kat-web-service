@@ -46,10 +46,10 @@ WHERE {
     ?obsValue dul:hasDataValue ?dataValue .
     ?observation ssn:observationSamplingTime ?instant .
     ?instant time:inXSDDateTime ?dateTime .
-    FILTER (
-         ( xsd:dateTime(?dateTime) > xsd:dateTime("2017-11-01T00:00:00Z"))
-      && ( xsd:dateTime(?dateTime) < xsd:dateTime("2017-11-30T23:59:59Z"))
-      ) .
+#    FILTER (
+#         ( xsd:dateTime(?dateTime) > xsd:dateTime("2017-11-01T00:00:00Z"))
+#      && ( xsd:dateTime(?dateTime) < xsd:dateTime("2017-11-30T23:59:59Z"))
+#      ) .
   FILTER (
        (xsd:double(?lat) >= "0"^^xsd:double)
     && (xsd:double(?lat) <= "60"^^xsd:double)

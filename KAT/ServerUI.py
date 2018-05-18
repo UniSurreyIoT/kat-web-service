@@ -31,6 +31,7 @@ def api_message():
         am = amc.AlgorithmManager()
     # json
         data = request.form
+        token = request.headers.get('iPlanetProDirectory')
         # Check to see if JSON format is correct
         try:
                 method1 = str(data['method1'])
@@ -51,8 +52,15 @@ def api_message():
         except:
             return render_template('KAT_index.html', Result="Incorrect JSON Labels")
 
-
-
+        # try:
+        #     print ("all headers:")
+        #     print request.headers
+        #     iPlanetDirectoryProStr = request.cookies.get('iPlanetDirectoryPro')
+        #     print ("This is the token header value: "+ iPlanetDirectoryProStr)
+        # except Exception as e:
+        #     print("Exception for getting token header")
+        #     print(e)
+        #     return jsonify(result="iPlanetDirectoryPro  Header not included"), 400
 
         #SPARQL query at the SPARQL end point to retreive data
         method = "POST"
@@ -64,6 +72,7 @@ def api_message():
 
         try:
             request_sparql = urllib2.Request(SPARQLendpoint, data=SPARQLquery)
+            # request_sparql.add_header("iPlanetProDirectory", token)
             request_sparql.add_header("Accept", 'text/csv')
             request_sparql.add_header("Content-Type", 'text/plain')
             # request_sparql.add_header("iPlanetDirectoryPro", iPlanetDirectoryProStr)
@@ -167,7 +176,7 @@ def api_message():
                 DataFromSensor=list(Data.iloc[:, 2*i])
                 # carry out resample of the list
                 TempListDataNew = [np.float(ui) for ui in DataFromSensor]
-                ResampledData = resample(np.array(TempListDataNew), 1,round(SampleFreq[i]/RealignSamplingFreq))
+                ResampledData = resample(np.array(TempListDataNew), 1, round(SampleFreq[i]/RealignSamplingFreq))
                 MinLengthTemp =len(ResampledData)
                 if i == 0:
                     DataResamp = pd.DataFrame(ResampledData[0:MinLength])
