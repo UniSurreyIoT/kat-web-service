@@ -6,7 +6,7 @@ from scipy import stats
 
 class Outlier():
     def process(self, data,parameter):
-        #Winsorizing based outlier removal method
+        # Winsorizing based outlier removal method
         limit=np.float(parameter)
         Data = np.transpose(np.array(data))
         size=Data.shape
